@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+.svn
+/AppDir
+/tools-download/*
+/git-checkout
+*.AppImage
