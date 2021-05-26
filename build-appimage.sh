@@ -27,19 +27,25 @@ TOOLSDIR=$(readlink -f $PROGDIR/tools-download)
 export PATH="$TOOLSDIR:$PATH"
 
 LINUXDEPLOY=$( { which linuxdeploy || which linuxdeploy-x86_64 || which linuxdeploy-x86_64.AppImage; } 2>/dev/null)
-test -n "$LINUXDEPLOY" || wget --unlink --continue --directory-prefix=$TOOLSDIR https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage || exit $?
-LINUXDEPLOY=$( { which linuxdeploy || which linuxdeploy-x86_64 || which linuxdeploy-x86_64.AppImage; } 2>/dev/null)
-test -x "$LINUXDEPLOY" || chmod +x "$LINUXDEPLOY" || exit $?
+test -n "$LINUXDEPLOY" || {
+  wget --unlink --continue --directory-prefix=$TOOLSDIR https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage || exit $?
+  test -x "$TOOLSDIR/linuxdeploy"* || chmod +x "$TOOLSDIR/linuxdeploy"* || exit $?
+  LINUXDEPLOY=$( { which linuxdeploy || which linuxdeploy-x86_64 || which linuxdeploy-x86_64.AppImage; } 2>/dev/null)
+} || exit $?
 
 APPIMAGETOOL=$( { which appimagetool || which appimagetool-x86_64 || which appimagetool-x86_64.AppImage; } 2>/dev/null)
-test -n "$APPIMAGETOOL" || wget --unlink --continue --directory-prefix=$TOOLSDIR https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage || exit $?
-APPIMAGETOOL=$( { which appimagetool || which appimagetool-x86_64 || which appimagetool-x86_64.AppImage; } 2>/dev/null)
-test -x "$APPIMAGETOOL" || chmod +x "$APPIMAGETOOL" || exit $?
+test -n "$APPIMAGETOOL" || {
+  wget --unlink --continue --directory-prefix=$TOOLSDIR https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage || exit $?
+  test -x "$TOOLSDIR/appimagetool"* || chmod +x "$TOOLSDIR/appimagetool"* || exit $?
+  APPIMAGETOOL=$( { which appimagetool || which appimagetool-x86_64 || which appimagetool-x86_64.AppImage; } 2>/dev/null)
+} || exit $?
 
 LINUXDEPLOYCHECKRT=$($LINUXDEPLOY --list-plugins 2>&1 | grep checkrt | cut -d' ' -f 2)
-test -n "$LINUXDEPLOYCHECKRT" || wget --unlink --continue --directory-prefix=$TOOLSDIR https://github.com/linuxdeploy/linuxdeploy-plugin-checkrt/releases/download/continuous/linuxdeploy-plugin-checkrt-x86_64.sh || exit $?
-LINUXDEPLOYCHECKRT=$($LINUXDEPLOY --list-plugins 2>&1 | grep checkrt | cut -d' ' -f 2)
-test -x "$LINUXDEPLOYCHECKRT" || chmod +x "$LINUXDEPLOYCHECKRT" || exit $?
+test -n "$LINUXDEPLOYCHECKRT" || {
+  wget --unlink --continue --directory-prefix=$TOOLSDIR https://github.com/linuxdeploy/linuxdeploy-plugin-checkrt/releases/download/continuous/linuxdeploy-plugin-checkrt-x86_64.sh || exit $?
+  test -x "$TOOLSDIR/linuxdeploy-plugin-checkrt"* || chmod +x "$TOOLSDIR/linuxdeploy-plugin-checkrt"* || exit $?
+  LINUXDEPLOYCHECKRT=$($LINUXDEPLOY --list-plugins 2>&1 | grep checkrt | cut -d' ' -f 2)
+} || exit $?
 
 #echo $( { which linuxdeploy || which linuxdeploy-x86_64 || which linuxdeploy-x86_64.AppImage; } 2>/dev/null)
 #echo $( { which appimagetool || which appimagetool-x86_64 || which appimagetool-x86_64.AppImage; } 2>/dev/null)
